@@ -7,7 +7,7 @@ plugins {
 }
 
 group = 'dev.foxikle'
-version = '0.01-alpha1'
+version = '0.01-alpha2'
 
 repositories {
     mavenCentral()

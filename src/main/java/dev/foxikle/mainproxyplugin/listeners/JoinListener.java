@@ -37,7 +37,6 @@ public class JoinListener {
 
         // allowed in
         List<UUID> friends = plugin.getDatabase().getFriends(player.getUniqueId());
-        System.out.println(friends);
         plugin.getFriendManager().setFriends(player.getUniqueId(), friends);
         friends.forEach(uuid -> {
             if(plugin.getProxy().getPlayer(uuid).isPresent()){
