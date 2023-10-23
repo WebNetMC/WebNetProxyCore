@@ -124,7 +124,6 @@ public class FriendCommand {
                                         case "add" ->
                                                 plugin.getFriendManager().dispachRequest(sender.getUniqueId(), target.getUniqueId());
                                         case "remove" -> {
-                                            System.out.println("REmOvE!");
                                             if (plugin.getFriendManager().isFriend(target.getUniqueId(), sender.getUniqueId())) {
                                                 plugin.getFriendManager().removeFriend(sender.getUniqueId(), target.getUniqueId());
                                             } else {
