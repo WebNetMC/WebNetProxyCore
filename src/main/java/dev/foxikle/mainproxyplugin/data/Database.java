@@ -144,4 +144,23 @@ public class Database {
         }
         return "ERROR!";
     }
+
+    public UUID getUUID(String name){
+        PreparedStatement ps;
+        try {
+            ps = connection.prepareStatement("SELECT uuid FROM webnetnames WHERE name = ?");
+            ps.setString(1, name);
+            ResultSet rs = ps.executeQuery();
+            if(rs.next()) {
+                try {
+                    return UUID.fromString(rs.getString("uuid"));
+                } catch (IllegalArgumentException ex) {
+                    return null;
+                }
+            }
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+        return null;
+    }
 }
