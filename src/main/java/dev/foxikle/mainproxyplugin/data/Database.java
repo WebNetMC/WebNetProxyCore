@@ -33,7 +33,6 @@ public class Database {
             plugin.getLogger().error("Failed to load database driver");
             e.printStackTrace();
         }
-        System.out.println("jdbc:mysql://" + host + ":" + port + "/" + database + "?useSSL=false " + username + " "  +password);
     }
 
 
@@ -136,7 +135,6 @@ public class Database {
         try {
             ps = connection.prepareStatement("SELECT name FROM webnetnames WHERE uuid = ?");
             ps.setString(1, uuid.toString());
-            System.out.println(ps);
             ResultSet rs = ps.executeQuery();
             if(rs.next()) {
                 return rs.getString("name");
