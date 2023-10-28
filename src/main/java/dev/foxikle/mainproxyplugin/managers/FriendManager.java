@@ -145,7 +145,7 @@ public class FriendManager {
                     .append(FoxRankAPI.getPlayerRank(target).getPrefix())
                     .append(Component.text(targetPlayer.getUsername(), FoxRankAPI.getPlayerRank(target).getColor()))
                     .append(Component.text("!", NamedTextColor.YELLOW))
-                    .append(LINE));
+                    .appendNewline().append(LINE));
         }
     }
 
