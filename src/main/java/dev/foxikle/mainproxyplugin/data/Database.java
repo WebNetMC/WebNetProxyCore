@@ -96,7 +96,6 @@ public class Database {
     }
 
     public void setFriends(UUID uuid, List<UUID> friends) {
-        plugin.getLogger().error(new Gson().toJson(friends));
         PreparedStatement ps;
         try {
             ps = getConnection().prepareStatement("UPDATE webnetfriends SET friends = ? WHERE uuid = ?");
