@@ -60,7 +60,7 @@ public class Request {
 
     public enum RequestType {
         FRIEND,
-        GUILD,
-        PARTy
+        LEAGUE,
+        PARTY
     }
 }

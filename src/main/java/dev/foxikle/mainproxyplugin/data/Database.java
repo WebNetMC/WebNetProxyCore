@@ -33,7 +33,6 @@ public class Database {
             plugin.getLogger().error("Failed to load database driver");
             e.printStackTrace();
         }
-        System.out.println("jdbc:mysql://" + host + ":" + port + "/" + database + "?useSSL=false " + username + " "  +password);
     }
 
 
@@ -97,7 +96,6 @@ public class Database {
     }
 
     public void setFriends(UUID uuid, List<UUID> friends) {
-        plugin.getLogger().error(new Gson().toJson(friends));
         PreparedStatement ps;
         try {
             ps = getConnection().prepareStatement("UPDATE webnetfriends SET friends = ? WHERE uuid = ?");
@@ -136,7 +134,6 @@ public class Database {
         try {
             ps = connection.prepareStatement("SELECT name FROM webnetnames WHERE uuid = ?");
             ps.setString(1, uuid.toString());
-            System.out.println(ps);
             ResultSet rs = ps.executeQuery();
             if(rs.next()) {
                 return rs.getString("name");
@@ -145,5 +142,24 @@ public class Database {
             e.printStackTrace();
         }
         return "ERROR!";
+    }
+
+    public UUID getUUID(String name){
+        PreparedStatement ps;
+        try {
+            ps = connection.prepareStatement("SELECT uuid FROM webnetnames WHERE name = ?");
+            ps.setString(1, name);
+            ResultSet rs = ps.executeQuery();
+            if(rs.next()) {
+                try {
+                    return UUID.fromString(rs.getString("uuid"));
+                } catch (IllegalArgumentException ex) {
+                    return null;
+                }
+            }
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+        return null;
     }
 }

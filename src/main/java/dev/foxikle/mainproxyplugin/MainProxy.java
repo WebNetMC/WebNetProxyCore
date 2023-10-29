@@ -15,13 +15,14 @@ import dev.dejvokep.boostedyaml.settings.dumper.DumperSettings;
 import dev.dejvokep.boostedyaml.settings.general.GeneralSettings;
 import dev.dejvokep.boostedyaml.settings.loader.LoaderSettings;
 import dev.dejvokep.boostedyaml.settings.updater.UpdaterSettings;
-import dev.foxikle.mainproxyplugin.commands.FriendCommand;
-import dev.foxikle.mainproxyplugin.commands.LobbyCommand;
-import dev.foxikle.mainproxyplugin.commands.MaintenanceModeCommand;
+import dev.foxikle.mainproxyplugin.commands.*;
 import dev.foxikle.mainproxyplugin.data.Database;
+import dev.foxikle.mainproxyplugin.listeners.ChatListener;
 import dev.foxikle.mainproxyplugin.listeners.JoinListener;
 import dev.foxikle.mainproxyplugin.listeners.LeaveListener;
+import dev.foxikle.mainproxyplugin.managers.ChatManager;
 import dev.foxikle.mainproxyplugin.managers.FriendManager;
+import dev.foxikle.mainproxyplugin.managers.PartyManager;
 import org.slf4j.Logger;
 
 import java.io.File;
@@ -37,7 +38,8 @@ import java.util.Objects;
         url = "https://foxikle.dev",
         authors = {"Foxikle"},
         dependencies = {
-                @Dependency(id = "foxrankvelocity")
+                @Dependency(id = "foxrankvelocity"),
+                @Dependency(id = "unsignedvelocity")
         }
 )
 public class MainProxy {
@@ -45,7 +47,12 @@ public class MainProxy {
     private final Logger logger;
     private final Path dataDirectory;
     private YamlDocument config;
-    private FriendManager friendManager;
+
+    // managers
+    private final FriendManager friendManager;
+    private final ChatManager chatManager;
+    private final PartyManager partyManager;
+
     private Database database;
 
     // constants
@@ -73,6 +80,8 @@ public class MainProxy {
             server.shutdown();
         }
         friendManager = new FriendManager(this);
+        chatManager = new ChatManager(this);
+        partyManager = new PartyManager(this);
     }
 
     @Subscribe
@@ -95,9 +104,13 @@ public class MainProxy {
         cm.register(cm.metaBuilder("lobby").aliases("l").plugin(this).build(), new LobbyCommand(server, this));
         cm.register(cm.metaBuilder("maintenancemode").aliases("mm").plugin(this).build(), new MaintenanceModeCommand(server, this));
         cm.register(cm.metaBuilder(FriendCommand.createBrigadierCommand(server, this)).aliases("f").plugin(this).build(), FriendCommand.createBrigadierCommand(server, this));
+        cm.register(cm.metaBuilder(ChatChannelCommand.createBrigadierCommand(server, this)).plugin(this).build(), ChatChannelCommand.createBrigadierCommand(server, this));
+        cm.register(cm.metaBuilder(PartyCommand.createBrigadierCommand(server, this)).aliases("p").plugin(this).build(), PartyCommand.createBrigadierCommand(server, this));
+
 
         // events
         server.getEventManager().register(this, new JoinListener(this));
+        server.getEventManager().register(this, new ChatListener(this));
         server.getEventManager().register(this, new LeaveListener(this));
 
     }
@@ -117,6 +130,14 @@ public class MainProxy {
 
     public FriendManager getFriendManager() {
         return friendManager;
+    }
+
+    public ChatManager getChatManager() {
+        return chatManager;
+    }
+
+    public PartyManager getPartyManager() {
+        return partyManager;
     }
 
     public YamlDocument getConfig() {
