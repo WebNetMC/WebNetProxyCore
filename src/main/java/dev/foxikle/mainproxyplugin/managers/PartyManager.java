@@ -127,7 +127,7 @@ public class PartyManager {
             if(proxy.getPlayer(party.getLeader()).isPresent()) {
                 proxy.getPlayer(party.getLeader()).get().sendMessage(
                         LINE
-                                .append(Component.text("You disbanded your party.", NamedTextColor.YELLOW))
+                                .append(Component.text("Your party was disbanded since you are the only one.", NamedTextColor.YELLOW))
                                 .appendNewline().append(LINE)
                 );
             }
@@ -140,7 +140,7 @@ public class PartyManager {
                             LINE
                                     .append(playerRank.getPrefix())
                                     .append(Component.text(username, playerRank.getColor()))
-                                    .append(Component.text(" disbanded the party.", NamedTextColor.YELLOW))
+                                    .append(Component.text(" The party was disbanded.", NamedTextColor.YELLOW))
                                     .appendNewline().append(LINE)
                     );
                 }
@@ -183,6 +183,7 @@ public class PartyManager {
                             .appendNewline().append(LINE)
             );
         }
+        checkForEmpty(party);
     }
 
     @Nullable
@@ -416,6 +417,11 @@ public class PartyManager {
                 );
             }
         }
+        if(proxy.getPlayer(member).isPresent())
+            proxy.getPlayer(member).get().sendMessage(
+                    LINE.append(Component.text("You left the party.", NamedTextColor.YELLOW))
+                            .appendNewline().append(LINE)
+            );
         checkForEmpty(party);
     }
 
