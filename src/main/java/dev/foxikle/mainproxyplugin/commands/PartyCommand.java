@@ -53,6 +53,10 @@ public class PartyCommand {
                             builder.suggest("disband", VelocityBrigadierMessage.tooltip(Component.text("Disbands your party.")));
                             builder.suggest("transfer", VelocityBrigadierMessage.tooltip(Component.text("Transfers leadership of the party.")));
                             builder.suggest("leave", VelocityBrigadierMessage.tooltip(Component.text("Leaves your party. If you are the leader, the party is transferred to a random member.")));
+                            if (ctx.getSource() instanceof Player player) {
+                                if (FoxRankAPI.getPlayerRank(player.getUniqueId()).getPermissionNodes().contains("webnet.party.yoink"))
+                                    builder.suggest("yoink", VelocityBrigadierMessage.tooltip(Component.text("Forcefully takes leadership of the party you are in.")));
+                            }
                             return builder.buildFuture();
                         })
                         .executes(context -> {
@@ -61,13 +65,13 @@ public class PartyCommand {
                                 case "LIST" -> {
                                     Player player = (Player) context.getSource();
                                     Party party = plugin.getPartyManager().getParty(player.getUniqueId());
-                                    if(party == null){
+                                    if (party == null) {
                                         player.sendMessage(Component.text("You are not in a party!", NamedTextColor.RED));
                                         return Command.SINGLE_SUCCESS;
                                     }
                                     boolean leaderOnline = proxy.getPlayer(party.getLeader()).isPresent();
                                     Player leader = null;
-                                    if(leaderOnline)
+                                    if (leaderOnline)
                                         leader = proxy.getPlayer(party.getLeader()).get();
 
                                     Component base = Component.text("").decoration(TextDecoration.STRIKETHROUGH, TextDecoration.State.FALSE)
@@ -93,10 +97,22 @@ public class PartyCommand {
 
                                     player.sendMessage(base);
                                 }
+                                case "YOINK" -> {
+                                    Player player = (Player) context.getSource();
+                                    Party party = plugin.getPartyManager().getParty(player.getUniqueId());
+                                    if (party == null) {
+                                        player.sendMessage(Component.text("You are not in a party!", NamedTextColor.RED));
+                                        return Command.SINGLE_SUCCESS;
+                                    }
+                                    if (FoxRankAPI.getPlayerRank(player.getUniqueId()).getPermissionNodes().contains("webnet.party.yoink"))
+                                        plugin.getPartyManager().yoinkParty(player.getUniqueId(), party);
+                                    else
+                                        player.sendMessage(Component.text("You do not have access to this sub command.", NamedTextColor.RED));
+                                }
                                 case "LEAVE" -> {
                                     Player player = (Player) context.getSource();
                                     Party party = plugin.getPartyManager().getParty(player.getUniqueId());
-                                    if(party == null){
+                                    if (party == null) {
                                         player.sendMessage(Component.text("You are not in a party!", NamedTextColor.RED));
                                         return Command.SINGLE_SUCCESS;
                                     }
@@ -109,11 +125,11 @@ public class PartyCommand {
                                 case "DISBAND" -> {
                                     Player player = (Player) context.getSource();
                                     Party party = plugin.getPartyManager().getParty(player.getUniqueId());
-                                    if(party == null) {
+                                    if (party == null) {
                                         player.sendMessage(Component.text("You are not in a party!", NamedTextColor.RED));
                                         return Command.SINGLE_SUCCESS;
                                     }
-                                    if(player.getUniqueId() == party.getLeader()){
+                                    if (player.getUniqueId() == party.getLeader()) {
                                         plugin.getPartyManager().disband(party, DisbandReason.COMMAND);
                                     } else {
                                         player.sendMessage(Component.text("You are not this party's leader!", NamedTextColor.RED));
@@ -123,39 +139,39 @@ public class PartyCommand {
                                 case "WARP" -> {
                                     Player player = (Player) context.getSource();
                                     Party party = plugin.getPartyManager().getParty(player.getUniqueId());
-                                    if(party == null){
+                                    if (party == null) {
                                         player.sendMessage(Component.text("You are not in a party!", NamedTextColor.RED));
                                         return Command.SINGLE_SUCCESS;
                                     }
-                                    if(player.getUniqueId() != party.getLeader()){
+                                    if (player.getUniqueId() != party.getLeader()) {
                                         player.sendMessage(Component.text("You are not this party's leader!", NamedTextColor.RED));
                                         return Command.SINGLE_SUCCESS;
                                     }
                                     CompletableFuture<Void> master = new CompletableFuture<>();
                                     AtomicInteger atomicInteger = new AtomicInteger(0);
                                     for (UUID uuid : party.getMembers()) {
-                                        if(proxy.getPlayer(uuid).isPresent()){
-                                         Player warpee = proxy.getPlayer(uuid).get();
-                                         master = CompletableFuture.allOf(
-                                         warpee.createConnectionRequest(player.getCurrentServer().get().getServer()).connect()
-                                                 .whenComplete((result, throwable) -> {
-                                             if(result.isSuccessful()){
-                                                 atomicInteger.getAndIncrement();
-                                                 warpee.sendMessage(PartyManager.LINE
-                                                         .append(FoxRankAPI.getPlayerRank(player.getUniqueId()).getPrefix())
-                                                         .append(Component.text(player.getUsername(), FoxRankAPI.getPlayerRank(player.getUniqueId()).getColor()))
-                                                         .append(Component.text(" warped you to their server.", NamedTextColor.YELLOW))
-                                                         .appendNewline().append(PartyManager.LINE));
-                                             }
-                                         }));
+                                        if (proxy.getPlayer(uuid).isPresent()) {
+                                            Player warpee = proxy.getPlayer(uuid).get();
+                                            master = CompletableFuture.allOf(
+                                                    warpee.createConnectionRequest(player.getCurrentServer().get().getServer()).connect()
+                                                            .whenComplete((result, throwable) -> {
+                                                                if (result.isSuccessful()) {
+                                                                    atomicInteger.getAndIncrement();
+                                                                    warpee.sendMessage(PartyManager.LINE
+                                                                            .append(FoxRankAPI.getPlayerRank(player.getUniqueId()).getPrefix())
+                                                                            .append(Component.text(player.getUsername(), FoxRankAPI.getPlayerRank(player.getUniqueId()).getColor()))
+                                                                            .append(Component.text(" warped you to their server.", NamedTextColor.YELLOW))
+                                                                            .appendNewline().append(PartyManager.LINE));
+                                                                }
+                                                            }));
                                         }
                                     }
-                                    master.whenComplete((unused, throwable) -> player.sendMessage(Component.text("Successfully warped " + atomicInteger.get() +  (atomicInteger.get() == 1 ? " player " : " players ") + "to your server.", NamedTextColor.GREEN)));
+                                    master.whenComplete((unused, throwable) -> player.sendMessage(Component.text("Successfully warped " + atomicInteger.get() + (atomicInteger.get() == 1 ? " player " : " players ") + "to your server.", NamedTextColor.GREEN)));
                                 }
                                 default -> {
                                     // send a party invite to this player
 
-                                    if(plugin.getDatabase().getUUID(argumentProvided) != null){
+                                    if (plugin.getDatabase().getUUID(argumentProvided) != null) {
                                         if (plugin.getProxy().getPlayer(argumentProvided).isPresent()) {
                                             Player sender = (Player) context.getSource();
                                             Player target = plugin.getProxy().getPlayer(argumentProvided).get();
@@ -196,7 +212,7 @@ public class PartyCommand {
 
                                     switch (sub.toUpperCase(Locale.ROOT)) {
                                         case "INVITE" -> {
-                                            if(party == null) {
+                                            if (party == null) {
                                                 party = new Party(sender.getUniqueId(), new ArrayList<>());
                                                 plugin.getPartyManager().registerParty(party);
                                             }
@@ -207,18 +223,18 @@ public class PartyCommand {
                                                         .appendNewline().append(PartyManager.LINE));
                                                 return Command.SINGLE_SUCCESS;
                                             }
-                                            if(sender.getUniqueId() != party.getLeader()){
+                                            if (sender.getUniqueId() != party.getLeader()) {
                                                 sender.sendMessage(Component.text("You are not this party's leader!", NamedTextColor.RED));
                                                 return Command.SINGLE_SUCCESS;
                                             }
                                             plugin.getPartyManager().dispatchInvite(sender.getUniqueId(), target.getUniqueId());
                                         }
                                         case "KICK", "K" -> {
-                                            if(party == null){
+                                            if (party == null) {
                                                 sender.sendMessage(Component.text("You are not in a party!", NamedTextColor.RED));
                                                 return Command.SINGLE_SUCCESS;
                                             }
-                                            if(sender.getUniqueId() != party.getLeader()){
+                                            if (sender.getUniqueId() != party.getLeader()) {
                                                 sender.sendMessage(Component.text("You are not this party's leader!", NamedTextColor.RED));
                                                 return Command.SINGLE_SUCCESS;
                                             }
@@ -241,11 +257,11 @@ public class PartyCommand {
                                             return Command.SINGLE_SUCCESS;
                                         }
                                         case "TRANSFER", "T" -> {
-                                            if(party == null){
+                                            if (party == null) {
                                                 sender.sendMessage(Component.text("You are not in a party!", NamedTextColor.RED));
                                                 return Command.SINGLE_SUCCESS;
                                             }
-                                            if(sender.getUniqueId() != party.getLeader()){
+                                            if (sender.getUniqueId() != party.getLeader()) {
                                                 sender.sendMessage(Component.text("You are not this party's leader!", NamedTextColor.RED));
                                                 return Command.SINGLE_SUCCESS;
                                             }
@@ -268,8 +284,23 @@ public class PartyCommand {
                                             return Command.SINGLE_SUCCESS;
                                         }
                                         case "JOIN" -> {
+                                            if(plugin.getPartyManager().getParty(sender.getUniqueId()) != null) {
+                                                sender.sendMessage(Component.text("You are already in a party. Leave your party to join a different one.", NamedTextColor.RED));
+                                                return Command.SINGLE_SUCCESS;
+                                            }
                                             if (plugin.getPartyManager().getInvite(sender.getUniqueId(), target.getUniqueId()) != null) {
                                                 plugin.getPartyManager().acceptInvite(sender.getUniqueId(), target.getUniqueId());
+                                            } else if (FoxRankAPI.getPlayerRank(sender.getUniqueId()).getPermissionNodes().contains("webnet.party.bypass_join")) {
+                                                party = plugin.getPartyManager().getParty(target.getUniqueId());
+                                                if(party != null){
+                                                    plugin.getPartyManager().joinParty(party, sender.getUniqueId());
+                                                } else {
+                                                    sender.sendMessage(
+                                                            FoxRankAPI.getPlayerRank(target.getUniqueId()).getPrefix()
+                                                                    .append(Component.text(target.getUsername(), FoxRankAPI.getPlayerRank(target.getUniqueId()).getColor()))
+                                                                    .append(Component.text(" does not have a party.", NamedTextColor.YELLOW))
+                                                    );
+                                                }
                                             } else {
                                                 sender.sendMessage(
                                                         FoxRankAPI.getPlayerRank(target.getUniqueId()).getPrefix()

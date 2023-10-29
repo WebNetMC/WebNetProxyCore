@@ -214,38 +214,40 @@ public class PartyManager {
             }
 
             joinParty(party, request.getTarget());
-
-            getParty(sender).getMembers().forEach(uuid -> {
-                if (proxy.getPlayer(uuid).isPresent()) {
-                    Player p = proxy.getPlayer(uuid).get();
-                    if (p.getUniqueId() != target)
-                        p.sendMessage(LINE
-                                .append(FoxRankAPI.getPlayerRank(target).getPrefix())
-                                .append(Component.text(author.getUsername(), FoxRankAPI.getPlayerRank(target).getColor()))
-                                .append(Component.text(" joined the party!", NamedTextColor.YELLOW))
-                                .appendNewline().append(LINE)
-                        );
-                }
-            });
-
-            senderPlayer.sendMessage(LINE
-                    .append(FoxRankAPI.getPlayerRank(target).getPrefix())
-                    .append(Component.text(author.getUsername(), FoxRankAPI.getPlayerRank(target).getColor()))
-                    .append(Component.text(" joined the party!", NamedTextColor.YELLOW))
-                    .appendNewline().append(LINE)
-            );
-
-            author.sendMessage(LINE
-                    .append(Component.text("You joined ", NamedTextColor.YELLOW))
-                    .append(FoxRankAPI.getPlayerRank(sender).getPrefix())
-                    .append(Component.text(senderPlayer.getUsername(), FoxRankAPI.getPlayerRank(sender).getColor()))
-                    .append(Component.text("'s party!", NamedTextColor.YELLOW))
-                    .appendNewline().append(LINE)
-            );
         }
     }
 
     public void joinParty(Party party, UUID toJoin) {
+        Player author = plugin.getProxy().getPlayer(toJoin).get();
+        Player senderPlayer = plugin.getProxy().getPlayer(party.getLeader()).get();
+
+        party.getMembers().forEach(uuid -> {
+            if (proxy.getPlayer(uuid).isPresent()) {
+                Player p = proxy.getPlayer(uuid).get();
+                if (p.getUniqueId() != toJoin)
+                    p.sendMessage(LINE
+                            .append(FoxRankAPI.getPlayerRank(toJoin).getPrefix())
+                            .append(Component.text(author.getUsername(), FoxRankAPI.getPlayerRank(toJoin).getColor()))
+                            .append(Component.text(" joined the party!", NamedTextColor.YELLOW))
+                            .appendNewline().append(LINE)
+                    );
+            }
+        });
+
+        senderPlayer.sendMessage(LINE
+                .append(FoxRankAPI.getPlayerRank(toJoin).getPrefix())
+                .append(Component.text(author.getUsername(), FoxRankAPI.getPlayerRank(toJoin).getColor()))
+                .append(Component.text(" joined the party!", NamedTextColor.YELLOW))
+                .appendNewline().append(LINE)
+        );
+
+        author.sendMessage(LINE
+                .append(Component.text("You joined ", NamedTextColor.YELLOW))
+                .append(FoxRankAPI.getPlayerRank(party.getLeader()).getPrefix())
+                .append(Component.text(senderPlayer.getUsername(), FoxRankAPI.getPlayerRank(party.getLeader()).getColor()))
+                .append(Component.text("'s party!", NamedTextColor.YELLOW))
+                .appendNewline().append(LINE)
+        );
         party.addPlayer(toJoin);
     }
 
@@ -420,5 +422,32 @@ public class PartyManager {
         if(party.getMembers().isEmpty()){
             disband(party, DisbandReason.EMPTY);
         }
+    }
+
+    public void yoinkParty(UUID uuid, Party party) {
+
+        parties.remove(party.getLeader());
+        party.addPlayer(party.getLeader());
+        party.transferLeader(uuid);
+        parties.put(uuid, party);
+
+        Player newLeader = proxy.getPlayer(uuid).get();
+        Rank leaderRank = FoxRankAPI.getPlayerRank(uuid);
+
+
+        party.getMembers().forEach(uuid1 -> {
+            if(proxy.getPlayer(uuid1).isPresent())
+                proxy.getPlayer(uuid1).get().sendMessage(
+                        LINE.append(leaderRank.getPrefix())
+                                .append(Component.text(newLeader.getUsername(), leaderRank.getColor()))
+                                .append(Component.text(" yoinked the party!", NamedTextColor.YELLOW))
+                                .appendNewline().append(LINE)
+                );
+        });
+
+        newLeader.sendMessage(LINE.append(
+                Component.text("You yoinked the party!", NamedTextColor.YELLOW))
+                .appendNewline().append(LINE)
+        );
     }
 }
