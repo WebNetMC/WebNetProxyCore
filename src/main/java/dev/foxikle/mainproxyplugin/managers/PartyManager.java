@@ -48,9 +48,7 @@ public class PartyManager {
         Rank oldLeaderRank = FoxRankAPI.getPlayerRank(party.getLeader());
         String oldLeaderName = plugin.getDatabase().getName(party.getLeader());
         parties.remove(party.getLeader());
-        party.addPlayer(party.getLeader());
-        party.transferLeader(newLeader);
-        parties.put(newLeader, party);
+
 
         if(reason == TransferReason.LEADER_LEFT){
             if(proxy.getPlayer(newLeader).isPresent())
@@ -76,6 +74,7 @@ public class PartyManager {
                     );
             });
         } else if(reason == TransferReason.COMMAND) {
+            party.addPlayer(party.getLeader());
             if(proxy.getPlayer(newLeader).isPresent())
                 proxy.getPlayer(newLeader).get().sendMessage(
                         LINE.append(oldLeaderRank.getPrefix())
@@ -95,6 +94,8 @@ public class PartyManager {
                     );
             });
         }
+        party.transferLeader(newLeader);
+        parties.put(newLeader, party);
     }
 
     public void disband(Party party, DisbandReason reason) {
