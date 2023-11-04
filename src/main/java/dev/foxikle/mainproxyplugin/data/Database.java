@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 public class Database {
     private final MainProxy plugin;
@@ -42,7 +43,16 @@ public class Database {
 
     public void connect() throws ClassNotFoundException, SQLException {
         if (!isConnected())
-            connection = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database + "?useSSL=false", username, password);
+            connection = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database + "?useSSL=false&autoReconnect=true", username, password);
+        plugin.getProxy().getScheduler().buildTask(plugin, () -> {
+            if(isConnected()){
+                try {
+                    connection.prepareStatement("SELECT * FROM webnetfriends").executeQuery();
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }).repeat(5, TimeUnit.MINUTES).schedule();
     }
 
     public void disconnect() {

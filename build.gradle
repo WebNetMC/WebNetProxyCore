@@ -7,7 +7,7 @@ plugins {
 }
 
 group = 'dev.foxikle'
-version = '0.01-alpha3'
+version = '0.01-alpha4'
 
 repositories {
     mavenCentral()
@@ -69,6 +69,6 @@ rootProject.idea.project.settings.taskTriggers.afterSync generateTemplates
 
 shadowJar {
     // The second string is where you will locate dev.dejvokep.boostedyaml
-    relocate 'dev.dejvokep.boostedyaml', 'dev.foxikle.foxrankvelocity.libs'
+    relocate 'dev.dejvokep.boostedyaml', 'dev.foxikle.webnetproxycore.libs'
     destinationDirectory.set(file("C:/Users/tscal/Desktop/bungeeserver/Velocity/plugins"))
 }
