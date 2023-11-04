@@ -1,0 +1,53 @@
+name: Build and Deploy to Main Velocity Proxy
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Java
+        uses: actions/setup-java@v2
+        with:
+          java-version: 'adopt@1.11'
+
+      - name: Build JAR
+        run: ./gradle assemble
+
+      - name: Find JAR
+        id: find-jar
+        run: echo ::set-output name=jar_name::$(find ./build/libs -name "*.jar")  
+        
+      - name: SSH into Proxy Server and delete old jar
+        uses: appleboy/ssh-action@v2
+        with:
+          host: ${{ secrets.SFTP_HOST }}
+          username: ${{ secrets.SFTP_USERNAME }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          script: |
+            # Delete the JAR after running
+            rm -f *WebNetProxyCore*.jar
+
+      - name: Deploy to Proxy Server
+        uses: wuakitv/sftp-deploy-action@v3
+        with:
+          host: ${{ secrets.SFTP_HOST }}
+          username: ${{ secrets.SFTP_USERNAME }}
+          password: ${{ secrets.SFTP_PASSWORD }}
+          local: ${{ steps.find-jar.outputs.jar_name }}
+          remote: /plugins
+          
+      - name: Connect and Run RCON Commands
+        run: |
+          # Use MCRcon to connect and run RCON commands
+          mcrcon -H ${{ secrets.RCON_HOST }} -P ${{ secrets.RCON_PORT }} -p ${{ secrets.RCON_PASSWORD }} "restartproxy"
+    
+          
+      
