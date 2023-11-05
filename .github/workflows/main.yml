@@ -29,13 +29,17 @@ jobs:
         id: find-jar
         run: echo ::set-output name=jar_name::$(find ./build/libs -name "*.jar")  
 
-      - name: Delete old file
-        uses: wvffle/sftp-delete-action@v1.5.1
+      - name: Remove old jar file
+        uses: StephanThierry/ftp-delete-action@v2.1
         with:
-          host: ${{ secrets.SFTP_HOST }}
-          username: ${{ secrets.SFTP_USERNAME }}
+          host: '${{ secrets.SFTP_HOST }}:${{ secrets.SFTP_PORT }}'
+          user: ${{ secrets.SFTP_USERNAME }}
           password: ${{ secrets.SFTP_PASSWORD }}
-          remote_path: /plugins/*WebNetProxyCore*.jar
+          remoteFiles: "*WebNetProxyPlugin*.jar"
+          remoteDirectories: "/plugins"
+          workingDir: "."
+          ignoreSSL: "1"
+
 
 
       - name: Deploy to Proxy Server
