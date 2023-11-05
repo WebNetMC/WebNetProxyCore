@@ -20,7 +20,7 @@ jobs:
           java-version: '17'
 
       - name: Build JAR
-        run: ./gradle assemble
+        run: ./gradlew assemble
 
       - name: Find JAR
         id: find-jar
