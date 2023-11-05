@@ -11,7 +11,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v1.0.0
+        uses: actions/checkout@v2
 
       - name: Set up Java
         uses: actions/setup-java@v2
@@ -26,7 +26,7 @@ jobs:
         run: echo ::set-output name=jar_name::$(find ./build/libs -name "*.jar")  
         
       - name: SSH into Proxy Server and delete old jar
-        uses: appleboy/ssh-action@v2
+        uses: appleboy/ssh-action@v1.0.0
         with:
           host: ${{ secrets.SFTP_HOST }}
           username: ${{ secrets.SFTP_USERNAME }}
