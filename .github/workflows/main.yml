@@ -32,18 +32,12 @@ jobs:
       - name: Remove old jar file
         run: |
           #!/bin/bash -x
-          password="your_password"
-          sshpass -p "${{ secrets.SFTP_PASSWORD }}" sftp ${{ secrets.SFTP_USERNAME }}@${{ secrets.SFTP_HOST }}:${{ secrets.SFTP_PORT }} <<EOF
-          ls
-          cd /plugins
-          rm *WebNetProxyCore*.jar
+          sshpass -p "${{ secrets.SFTP_PASSWORD }}" sftp ${{ secrets.SFTP_USERNAME }}@${{ secrets.SFTP_HOST }}:${{ secrets.SFTP_PORT }}
+          cd /plugins || exit
+          rm ./*WebNetProxyCore*.jar
           bye
           EOF
-
-
-
-
-
+          
       - name: Deploy to Proxy Server
         uses: wlixcc/SFTP-Deploy-Action@v1.2.4
         with:
