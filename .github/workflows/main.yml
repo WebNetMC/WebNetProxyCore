@@ -32,29 +32,13 @@ jobs:
       - name: Remove old jar file
         run: |
           #!/bin/bash
-
-          # Server and authentication details
-          SFTP_HOST=${{ secrets.SFTP_HOST }}
-          SFTP_PORT=${{ secrets.SFTP_PORT }}
-          SFTP_USER=${{ secrets.SFTP_USERNAME }}
-          SFTP_PASS=${{ secrets.SFTP_PASSWORD }}
-
-          # File to delete
-          FILE_TO_DELETE="/plugins/*WebNetProxyPlugin*.jar"
-
-          # SFTP command to delete the file
-          sftp -oPort=$SFTP_PORT $SFTP_USER@$SFTP_HOST <<EOF
-            cd $(dirname "$FILE_TO_DELETE")
-            rm $(basename "$FILE_TO_DELETE")
-            exit
+          password="your_password"
+          sshpass -p "${{ secrets.SFTP_PASSWORD }}" sftp ${{ secrets.SFTP_USERNAME }}@${{ secrets.SFTP_HOST }}:${{ secrets.SFTP_PORT }} <<EOF
+          cd /plugins
+          rm *WebNetProxyCore*.jar
+          bye
           EOF
 
-          # Check the exit status
-          if [ $? -eq 0 ]; then
-            echo "File $FILE_TO_DELETE deleted successfully."
-          else
-            echo "Failed to delete file $FILE_TO_DELETE."
-          fi
 
 
 
