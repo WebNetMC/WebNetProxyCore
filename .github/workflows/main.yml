@@ -33,7 +33,7 @@ jobs:
         run: |
           #!/bin/bash -x
           sshpass -p "${{ secrets.SFTP_PASSWORD }}" sftp ${{ secrets.SFTP_USERNAME }}@${{ secrets.SFTP_HOST }}:${{ secrets.SFTP_PORT }}
-          cd /plugins || exit
+          cd ./plugins || exit
           rm ./*WebNetProxyCore*.jar
           bye
           EOF
