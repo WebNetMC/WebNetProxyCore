@@ -36,7 +36,7 @@ jobs:
             rm -f *WebNetProxyCore*.jar
 
       - name: Deploy to Proxy Server
-        uses: wuakitv/sftp-deploy-action@v3
+        uses: wlixcc/SFTP-Deploy-Action@v1.2.4
         with:
           host: ${{ secrets.SFTP_HOST }}
           username: ${{ secrets.SFTP_USERNAME }}
