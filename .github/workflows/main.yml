@@ -16,7 +16,8 @@ jobs:
       - name: Set up Java
         uses: actions/setup-java@v2
         with:
-          java-version: 'adopt@1.11'
+          distribution: 'zulu'
+          java-version: '17'
 
       - name: Build JAR
         run: ./gradle assemble
