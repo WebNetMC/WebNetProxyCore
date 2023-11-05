@@ -35,6 +35,7 @@ jobs:
           host: ${{ secrets.SFTP_HOST }}
           username: ${{ secrets.SFTP_USERNAME }}
           password: ${{ secrets.SSH_PASSWORD }}
+          port: ${{ secrets.SFTP_PORT }}
           script: |
             # Delete the JAR after running
             rm -f *WebNetProxyCore*.jar
