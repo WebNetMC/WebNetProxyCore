@@ -31,7 +31,7 @@ jobs:
 
       - name: Remove old jar file
         run: |
-          #!/bin/bash
+          #!/bin/bash -x
           password="your_password"
           sshpass -p "${{ secrets.SFTP_PASSWORD }}" sftp ${{ secrets.SFTP_USERNAME }}@${{ secrets.SFTP_HOST }}:${{ secrets.SFTP_PORT }} <<EOF
           ls
