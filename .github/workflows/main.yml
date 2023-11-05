@@ -37,7 +37,7 @@ jobs:
           password: ${{ secrets.SFTP_PASSWORD }}
           remoteFiles: "*WebNetProxyPlugin*.jar"
           remoteDirectories: "/plugins"
-          workingDir: "."
+          workingDir: "/"
           ignoreSSL: "1"
 
 
