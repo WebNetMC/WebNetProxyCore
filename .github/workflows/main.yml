@@ -30,13 +30,13 @@ jobs:
         run: echo ::set-output name=jar_name::$(find ./build/libs -name "*.jar")  
 
       - name: Remove old jar file
-        run: |
-          #!/bin/bash -x
-          sftp -P ${{ secrets.SFTP_PORT }} -i ${{ secrets.SSH_KEY }} sftp://${{ secrets.SFTP_USERNAME }}@${{ secrets.SFTP_HOST }} <<EOF
-          cd ./plugins || exit
-          rm ./*WebNetProxyCore*.jar
-          bye
-          EOF
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.SFTP_HOST }}
+          username: ${{ secrets.SFTP_USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.SFTP_PORT }}
+          script: deletejar
           
       - name: Deploy to Proxy Server
         uses: wlixcc/SFTP-Deploy-Action@v1.2.4
