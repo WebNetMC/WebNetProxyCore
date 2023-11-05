@@ -32,7 +32,7 @@ jobs:
       - name: Remove old jar file
         run: |
           #!/bin/bash -x
-          sftp -P ${{ secrets.SFTP_PORT }} sftp://${{ secrets.SFTP_USERNAME }}:${{ secrets.SFTP_PASSWORD }}"@${{ secrets.SFTP_HOST }} <<EOF
+          sftp -P ${{ secrets.SFTP_PORT }} sftp://${{ secrets.SFTP_USERNAME }}"@${{ secrets.SFTP_HOST }} <<EOF
           cd ./plugins || exit
           rm ./*WebNetProxyCore*.jar
           bye
