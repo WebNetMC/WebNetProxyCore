@@ -30,14 +30,32 @@ jobs:
         run: echo ::set-output name=jar_name::$(find ./build/libs -name "*.jar")  
 
       - name: Remove old jar file
-        uses: StephanThierry/ftp-delete-action@v2.1
-        with:
-          host: '${{ secrets.SFTP_HOST }}:${{ secrets.SFTP_PORT }}'
-          user: ${{ secrets.SFTP_USERNAME }}
-          password: ${{ secrets.SFTP_PASSWORD }}
-          remoteFiles: "*WebNetProxyPlugin*.jar"
-          workingDir: "/plugins"
-          ignoreSSL: "1"
+        run: |
+          #!/bin/bash
+
+          # Server and authentication details
+          SFTP_HOST=${{ secrets.SFTP_HOST }}
+          SFTP_PORT=${{ secrets.SFTP_PORT }}
+          SFTP_USER=${{ secrets.SFTP_USERNAME }}
+          SFTP_PASS=${{ secrets.SFTP_PASSWORD }}
+
+          # File to delete
+          FILE_TO_DELETE="/plugins/*WebNetProxyPlugin*.jar"
+
+          # SFTP command to delete the file
+          sftp -oPort=$SFTP_PORT $SFTP_USER@$SFTP_HOST <<EOF
+            cd $(dirname "$FILE_TO_DELETE")
+            rm $(basename "$FILE_TO_DELETE")
+            exit
+          EOF
+
+          # Check the exit status
+          if [ $? -eq 0 ]; then
+            echo "File $FILE_TO_DELETE deleted successfully."
+          else
+            echo "Failed to delete file $FILE_TO_DELETE."
+          fi
+
 
 
 
@@ -46,6 +64,7 @@ jobs:
         with:
           host: ${{ secrets.SFTP_HOST }}
           username: ${{ secrets.SFTP_USERNAME }}
+          port: ${{ secrets.SFTP_PORT }}
           password: ${{ secrets.SFTP_PASSWORD }}
           local: ${{ steps.find-jar.outputs.jar_name }}
           remote: /plugins
