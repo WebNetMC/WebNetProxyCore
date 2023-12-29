@@ -36,9 +36,7 @@ jobs:
           username: ${{ secrets.SFTP_USERNAME }}
           key: ${{ secrets.SSH_KEY }}
           port: ${{ secrets.SFTP_PORT }}
-          script: |
-            ls
-            sh deletejar.sh
+          script: ls
           debug: true
           
       - name: Deploy to Proxy Server
