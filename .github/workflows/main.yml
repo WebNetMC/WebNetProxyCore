@@ -46,6 +46,7 @@ jobs:
           server: ${{ secrets.RCON_HOST }}
           port: ${{ secrets.RCON_PORT }}
           password: ${{ secrets.RCON_PASSWORD }}
+          send-push-info: false
           commands: '["restartproxy"]'
     
     
