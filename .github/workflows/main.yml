@@ -28,16 +28,6 @@ jobs:
       - name: Find JAR
         id: find-jar
         run: echo ::set-output name=jar_name::$(find ./build/libs -name "*.jar")  
-
-      - name: Remove old jar file
-        uses: appleboy/ssh-action@v1.0.0
-        with:
-          host: ${{ secrets.SFTP_HOST }}
-          username: ${{ secrets.SFTP_USERNAME }}
-          key: ${{ secrets.SSH_KEY }}
-          port: ${{ secrets.SFTP_PORT }}
-          script: ls
-          debug: true
           
       - name: Deploy to Proxy Server
         uses: wlixcc/SFTP-Deploy-Action@v1.2.4
