@@ -38,10 +38,6 @@ java {
     }
 }
 
-jar{
-    archiveFileName = 'webnetproxy.jar'
-}
-
 tasks{
     assemble {
         dependsOn(shadowJar)
@@ -74,5 +70,6 @@ rootProject.idea.project.settings.taskTriggers.afterSync generateTemplates
 
 shadowJar {
     // The second string is where you will locate dev.dejvokep.boostedyaml
+    archiveFileName = "webnetproxy.jar"
     relocate 'dev.dejvokep.boostedyaml', 'dev.foxikle.webnetproxycore.libs'
 }
