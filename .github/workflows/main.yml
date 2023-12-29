@@ -36,7 +36,8 @@ jobs:
           username: ${{ secrets.SFTP_USERNAME }}
           key: ${{ secrets.SSH_KEY }}
           port: ${{ secrets.SFTP_PORT }}
-          script: deletejar
+          script: sh deletejar.sh
+          debug: true
           
       - name: Deploy to Proxy Server
         uses: wlixcc/SFTP-Deploy-Action@v1.2.4
