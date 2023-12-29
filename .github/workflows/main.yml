@@ -27,7 +27,7 @@ jobs:
 
       - name: Find JAR
         id: find-jar
-        run: echo ::set-output name=jar_name::$(find ./build/libs -name "*.jar")  
+        run: echo ::set-output name=jar_name::$(find ./build/libs -name "webnetproxy.jar")  
           
       - name: Deploy to Proxy Server
         uses: wlixcc/SFTP-Deploy-Action@v1.2.4
@@ -39,11 +39,15 @@ jobs:
           local_path: ${{ steps.find-jar.outputs.jar_name }}
           remote_path: /plugins
           sftp_only: true
-          
-      - name: Connect and Run RCON Commands
-        run: |
-          # Use MCRcon to connect and run RCON commands
-          mcrcon -H ${{ secrets.RCON_HOST }} -P ${{ secrets.RCON_PORT }} -p ${{ secrets.RCON_PASSWORD }} "restartproxy"
+
+      - name: RCON Connection
+        uses: Plagiatus/RCON-Action@v0.2
+        with:
+          server: ${{ secrets.RCON_HOST }}
+          port: ${{ secrets.RCON_PORT }}
+          password: ${{ secrets.RCON_PASSWORD }}
+          commands: '["restartproxy"]'
+    
     
           
       
