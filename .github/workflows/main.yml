@@ -36,8 +36,8 @@ jobs:
           username: ${{ secrets.SFTP_USERNAME }}
           port: ${{ secrets.SFTP_PORT }}
           password: ${{ secrets.SFTP_PASSWORD }}
-          local: ${{ steps.find-jar.outputs.jar_name }}
-          remote: /plugins
+          local_path: ${{ steps.find-jar.outputs.jar_name }}
+          remote_path: /plugins
           
       - name: Connect and Run RCON Commands
         run: |
