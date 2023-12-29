@@ -37,6 +37,11 @@ java {
         toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
     }
 }
+
+jar{
+    archiveFileName = 'webnetproxy.jar'
+}
+
 tasks{
     assemble {
         dependsOn(shadowJar)
