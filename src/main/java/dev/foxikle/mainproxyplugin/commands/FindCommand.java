@@ -9,19 +9,13 @@ import com.velocitypowered.api.command.BrigadierCommand;
 import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
-import dev.foxikle.foxrankvelocity.FoxRankAPI;
 import dev.foxikle.mainproxyplugin.MainProxy;
-import dev.foxikle.mainproxyplugin.data.enums.TransferReason;
-import dev.foxikle.mainproxyplugin.data.objects.Party;
-import dev.foxikle.mainproxyplugin.managers.PartyManager;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 
-import java.util.ArrayList;
-import java.util.Locale;
 import java.util.UUID;
 
 public class FindCommand {

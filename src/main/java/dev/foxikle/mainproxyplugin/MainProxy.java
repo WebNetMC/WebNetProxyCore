@@ -106,6 +106,7 @@ public class MainProxy {
         cm.register(cm.metaBuilder(FriendCommand.createBrigadierCommand(server, this)).aliases("f").plugin(this).build(), FriendCommand.createBrigadierCommand(server, this));
         cm.register(cm.metaBuilder(ChatChannelCommand.createBrigadierCommand(server, this)).plugin(this).build(), ChatChannelCommand.createBrigadierCommand(server, this));
         cm.register(cm.metaBuilder(PartyCommand.createBrigadierCommand(server, this)).aliases("p").plugin(this).build(), PartyCommand.createBrigadierCommand(server, this));
+        cm.register(cm.metaBuilder(FindCommand.createBrigadierCommand(server, this)).plugin(this).build(), FindCommand.createBrigadierCommand(server, this));
 
 
         // events
