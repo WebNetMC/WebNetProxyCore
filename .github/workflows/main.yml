@@ -35,7 +35,7 @@ jobs:
           server: ${{ secrets.SFTP_HOST }}
           username: ${{ secrets.SFTP_USERNAME }}
           port: ${{ secrets.SFTP_PORT }}
-          ssh_private_key: ${{ secrets.SSH_KEY }}
+          password: ${{ secrets.SFTP_PASSWORD }}
           local_path: ${{ steps.find-jar.outputs.jar_name }}
           remote_path: plugins/
           sftp_only: true
