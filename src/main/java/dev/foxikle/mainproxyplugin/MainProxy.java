@@ -21,6 +21,7 @@ import dev.foxikle.mainproxyplugin.commands.MaintenanceModeCommand;
 import dev.foxikle.mainproxyplugin.data.Database;
 import dev.foxikle.mainproxyplugin.listeners.JoinListener;
 import dev.foxikle.mainproxyplugin.listeners.LeaveListener;
+import dev.foxikle.mainproxyplugin.listeners.ProxyPingListener;
 import dev.foxikle.mainproxyplugin.managers.FriendManager;
 import org.slf4j.Logger;
 
@@ -99,6 +100,7 @@ public class MainProxy {
         // events
         server.getEventManager().register(this, new JoinListener(this));
         server.getEventManager().register(this, new LeaveListener(this));
+        server.getEventManager().register(this, new ProxyPingListener());
 
     }
 
