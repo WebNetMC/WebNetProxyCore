@@ -20,6 +20,7 @@ import dev.foxikle.mainproxyplugin.data.Database;
 import dev.foxikle.mainproxyplugin.listeners.ChatListener;
 import dev.foxikle.mainproxyplugin.listeners.JoinListener;
 import dev.foxikle.mainproxyplugin.listeners.LeaveListener;
+import dev.foxikle.mainproxyplugin.listeners.ProxyPingListener;
 import dev.foxikle.mainproxyplugin.managers.ChatManager;
 import dev.foxikle.mainproxyplugin.managers.FriendManager;
 import dev.foxikle.mainproxyplugin.managers.PartyManager;
@@ -113,6 +114,7 @@ public class MainProxy {
         server.getEventManager().register(this, new JoinListener(this));
         server.getEventManager().register(this, new ChatListener(this));
         server.getEventManager().register(this, new LeaveListener(this));
+        server.getEventManager().register(this, new ProxyPingListener());
 
     }
 
