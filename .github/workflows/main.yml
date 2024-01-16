@@ -1,0 +1,54 @@
+name: Build and Deploy to Main Velocity Proxy
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew  
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Build JAR
+        run: ./gradlew assemble
+
+      - name: Find JAR
+        id: find-jar
+        run: echo ::set-output name=jar_name::$(find ./build/libs -name "webnetproxy.jar")  
+          
+      - name: Deploy to Proxy Server
+        uses: wlixcc/SFTP-Deploy-Action@v1.2.4
+        with:
+          server: ${{ secrets.SFTP_HOST }}
+          username: ${{ secrets.SFTP_USERNAME }}
+          port: ${{ secrets.SFTP_PORT }}
+          password: ${{ secrets.SFTP_PASSWORD }}
+          local_path: ${{ steps.find-jar.outputs.jar_name }}
+          remote_path: plugins/
+          sftp_only: true
+
+      - name: RCON Connection
+        uses: Plagiatus/RCON-Action@v0.2
+        with:
+          server: ${{ secrets.RCON_HOST }}
+          port: ${{ secrets.RCON_PORT }}
+          password: ${{ secrets.RCON_PASSWORD }}
+          send-push-info: false
+          commands: '["restartproxy"]'
+    
+    
+          
+      
