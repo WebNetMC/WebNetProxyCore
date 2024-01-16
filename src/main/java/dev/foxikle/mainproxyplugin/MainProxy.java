@@ -9,6 +9,7 @@ import com.velocitypowered.api.plugin.Dependency;
 import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.ProxyServer;
+import com.velocitypowered.api.proxy.messages.MinecraftChannelIdentifier;
 import dev.dejvokep.boostedyaml.YamlDocument;
 import dev.dejvokep.boostedyaml.dvs.versioning.BasicVersioning;
 import dev.dejvokep.boostedyaml.settings.dumper.DumperSettings;
@@ -17,10 +18,7 @@ import dev.dejvokep.boostedyaml.settings.loader.LoaderSettings;
 import dev.dejvokep.boostedyaml.settings.updater.UpdaterSettings;
 import dev.foxikle.mainproxyplugin.commands.*;
 import dev.foxikle.mainproxyplugin.data.Database;
-import dev.foxikle.mainproxyplugin.listeners.ChatListener;
-import dev.foxikle.mainproxyplugin.listeners.JoinListener;
-import dev.foxikle.mainproxyplugin.listeners.LeaveListener;
-import dev.foxikle.mainproxyplugin.listeners.ProxyPingListener;
+import dev.foxikle.mainproxyplugin.listeners.*;
 import dev.foxikle.mainproxyplugin.managers.ChatManager;
 import dev.foxikle.mainproxyplugin.managers.FriendManager;
 import dev.foxikle.mainproxyplugin.managers.PartyManager;
@@ -58,6 +56,9 @@ public class MainProxy {
 
     // constants
     public static boolean MAINTENANCE_MODE = false;
+
+    public static final MinecraftChannelIdentifier MAIN_CHANNEL = MinecraftChannelIdentifier.from("webnetproxy:main");
+    public static final MinecraftChannelIdentifier LOBBY_REQUEST = MinecraftChannelIdentifier.from("webnetproxy:lobby_request");
 
     @Inject
     public MainProxy(ProxyServer server, Logger logger, @DataDirectory Path dataDirectory) {
@@ -99,6 +100,10 @@ public class MainProxy {
         database.createFriendsTable();
         database.createNameTable();
 
+        //plugin message listeners
+        server.getChannelRegistrar().register(LOBBY_REQUEST);
+        server.getChannelRegistrar().register(MAIN_CHANNEL);
+
 
         // commands
         CommandManager cm = server.getCommandManager();
@@ -114,6 +119,7 @@ public class MainProxy {
         server.getEventManager().register(this, new JoinListener(this));
         server.getEventManager().register(this, new ChatListener(this));
         server.getEventManager().register(this, new LeaveListener(this));
+        server.getEventManager().register(this, new PluginChannelListener(this));
         server.getEventManager().register(this, new ProxyPingListener());
 
     }
@@ -121,6 +127,8 @@ public class MainProxy {
     @Subscribe
     public void onProxyShutdown(ProxyShutdownEvent event) {
         database.disconnect();
+        server.getChannelRegistrar().unregister(LOBBY_REQUEST);
+        server.getChannelRegistrar().unregister(MAIN_CHANNEL);
     }
 
     public ProxyServer getProxy() {
