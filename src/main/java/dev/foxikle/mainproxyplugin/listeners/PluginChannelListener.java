@@ -17,8 +17,11 @@ public class PluginChannelListener {
     @Subscribe
     public void onPluginMessage(PluginMessageEvent event) {
         if (event.getIdentifier() == MainProxy.MAIN_CHANNEL) {
-            // main channel things
+            if(event.getSource() instanceof Player player) {
+                player.sendMessage(Component.text("Yo ur gettin messaged on main channel!"));
+            }
         } else if (event.getIdentifier() == MainProxy.LOBBY_REQUEST) {
+            plugin.getLogger().info("Message recieved on lobby reqeust channel from: " + event.getSource().toString());
            if(event.getSource() instanceof Player player) {
                player.sendMessage(Component.text("Yo ur gettin transfered!"));
                plugin.getProxy().getScheduler().buildTask(plugin, () -> ServerUtils.connectToServer("lobby", plugin.getProxy(), player)).schedule();
