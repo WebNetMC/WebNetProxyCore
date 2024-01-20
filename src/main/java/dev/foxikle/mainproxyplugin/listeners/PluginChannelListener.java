@@ -3,6 +3,7 @@ package dev.foxikle.mainproxyplugin.listeners;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.connection.PluginMessageEvent;
 import com.velocitypowered.api.proxy.Player;
+import com.velocitypowered.api.proxy.ServerConnection;
 import dev.foxikle.mainproxyplugin.MainProxy;
 import dev.foxikle.mainproxyplugin.utils.ServerUtils;
 import net.kyori.adventure.text.Component;
@@ -23,8 +24,11 @@ public class PluginChannelListener {
         } else if (event.getIdentifier() == MainProxy.LOBBY_REQUEST) {
             plugin.getLogger().info("Message recieved on lobby reqeust channel from: " + event.getSource().toString());
            if(event.getSource() instanceof Player player) {
-               player.sendMessage(Component.text("Yo ur gettin transfered!"));
+               player.sendMessage(Component.text("Why thank you for reqesting to go to the lobby."));
                plugin.getProxy().getScheduler().buildTask(plugin, () -> ServerUtils.connectToServer("lobby", plugin.getProxy(), player)).schedule();
+           } else if (event.getSource() instanceof ServerConnection connection) {
+               connection.getPlayer().sendMessage(Component.text("Why thank you for reqesting to go to the lobby."));
+               plugin.getProxy().getScheduler().buildTask(plugin, () -> ServerUtils.connectToServer("lobby", plugin.getProxy(), connection.getPlayer())).schedule();
            }
         }
     }
