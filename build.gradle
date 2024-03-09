@@ -6,7 +6,7 @@ plugins {
 
 }
 
-group = 'dev.foxikle'
+group = 'net.cytonic'
 version = '0.01-alpha4'
 
 repositories {
