@@ -15,12 +15,10 @@ import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
-
 import java.util.UUID;
 
 public class FindCommand {
     public static BrigadierCommand createBrigadierCommand(final ProxyServer proxy, final MainProxy plugin) {
-
 
         // BrigadierCommand implements Command
         return new BrigadierCommand(getNode(proxy, plugin));

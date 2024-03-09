@@ -23,7 +23,6 @@ import net.cytonic.mainproxyplugin.managers.ChatManager;
 import net.cytonic.mainproxyplugin.managers.FriendManager;
 import net.cytonic.mainproxyplugin.managers.PartyManager;
 import org.slf4j.Logger;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;

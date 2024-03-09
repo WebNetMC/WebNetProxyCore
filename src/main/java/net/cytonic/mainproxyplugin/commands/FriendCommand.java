@@ -17,13 +17,11 @@ import net.cytonic.mainproxyplugin.managers.FriendManager;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
-
 import java.util.Locale;
 import java.util.UUID;
 
 public class FriendCommand {
     public static BrigadierCommand createBrigadierCommand(final ProxyServer proxy, final MainProxy plugin) {
-
 
         // BrigadierCommand implements Command
         return new BrigadierCommand(getNode(proxy, plugin));

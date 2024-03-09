@@ -1,16 +1,13 @@
 package net.cytonic.mainproxyplugin.listeners;
 
-import com.velocitypowered.api.event.ResultedEvent;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.connection.DisconnectEvent;
-import com.velocitypowered.api.event.connection.LoginEvent;
 import com.velocitypowered.api.proxy.Player;
 import dev.foxikle.foxrankvelocity.FoxRankAPI;
 import dev.foxikle.foxrankvelocity.Rank;
 import net.cytonic.mainproxyplugin.MainProxy;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
-
 import java.util.List;
 import java.util.UUID;
 

@@ -9,8 +9,6 @@ import dev.foxikle.foxrankvelocity.Rank;
 import net.cytonic.mainproxyplugin.MainProxy;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
-import org.checkerframework.checker.units.qual.C;
-
 import java.util.List;
 import java.util.UUID;
 

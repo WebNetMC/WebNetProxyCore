@@ -16,7 +16,6 @@ import net.cytonic.mainproxyplugin.MainProxy;
 import net.cytonic.mainproxyplugin.data.enums.ChatChannel;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
-
 import java.util.Locale;
 
 public class ChatChannelCommand {

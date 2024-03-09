@@ -20,7 +20,6 @@ import net.cytonic.mainproxyplugin.managers.PartyManager;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
-
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.UUID;
@@ -29,7 +28,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class PartyCommand {
     public static BrigadierCommand createBrigadierCommand(final ProxyServer proxy, final MainProxy plugin) {
-
 
         // BrigadierCommand implements Command
         return new BrigadierCommand(getNode(proxy, plugin));

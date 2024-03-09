@@ -11,8 +11,8 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 public class Database {
-    private final MainProxy plugin;
 
+    private final MainProxy plugin;
     private final String host;
     private final String port;
     private final String database;

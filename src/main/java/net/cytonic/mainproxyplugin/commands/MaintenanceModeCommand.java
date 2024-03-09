@@ -7,7 +7,6 @@ import dev.foxikle.foxrankvelocity.FoxRankAPI;
 import net.cytonic.mainproxyplugin.MainProxy;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
-
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 

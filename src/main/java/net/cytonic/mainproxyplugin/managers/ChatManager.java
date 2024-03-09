@@ -5,7 +5,6 @@ import net.cytonic.mainproxyplugin.MainProxy;
 import net.cytonic.mainproxyplugin.data.enums.ChatChannel;
 import net.cytonic.mainproxyplugin.data.objects.Party;
 import net.kyori.adventure.text.Component;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
