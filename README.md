@@ -1,2 +1,2 @@
-# WebNetProxyCore
-The core of plugin of the WebNet Velocity proxy
+# CytonicProxyCore
+The core of plugin of the Cytonic Velocity proxy
